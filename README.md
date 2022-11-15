@@ -52,3 +52,18 @@ In this case device URI would be `usb:2.4.5`.
 
 PlutoSDR USB ID will be presented when starting the container using `run-over-usb.sh` script.
 
+
+## Windows
+
+Presented docker image also works with windows host system. Communication over network is working.
+To make it working Xorg and PulseAudio server must be installed.
+Image can be run using following command:
+
+```bash
+docker run --rm -d --add-host pluto.local:192.168.2.1 --volume C:\Users\filluser\path\docker-gnuradio-pluto-master\gnuradio:/home/gnuradio -e DISPLAY=host.docker.internal:0 -e PULSE_SERVER=tcp:192.168.2.10 --network host --name gnuradio gnuradio
+```
+Where ip address 192.168.2.1 is pointing to pluto. Address 192.168.2.10 points to host. This addresses are default for pluto.
+
+
+
+
