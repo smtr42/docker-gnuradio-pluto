@@ -55,14 +55,49 @@ PlutoSDR USB ID will be presented when starting the container using `run-over-us
 
 ## Windows
 
-Presented docker image also works with windows host system. Communication over network is working.
-To make it working Xorg and PulseAudio server must be installed.
-Image can be run using following command:
+Presented docker image works with windows host system. Communication over network is used.
+To make it working X server and PulseAudio server must be installed.
+
+X server can be downloaded from this link: https://sourceforge.net/projects/vcxsrv/
+
+Pulseaudio for windows can be downloaded using link: http://bosmans.ch/pulseaudio/pulseaudio-1.1.zip 
+
+It needs some changes in configuration files.
+```
+File: /etc/pulse/default.pa
+Line 61: #load-module module-native-protocol-tcp
+``` 
+Line 61 should be uncommented to enable network protocol.
+
+We need to allow anonymous connections by adding auth-anonymous=1, or ip address for connection can be specified: auth-ip-acl=192.168.3.10.
+
+After modification complete line should be like this: 
+```
+load-module module-native-protocol-tcp auth-anonymous=1
+```
+or 
+```
+load-module module-native-protocol-tcp auth-ip-acl=192.168.2.10
+```
+
+Second modification is to disable timeout.
+```
+File: /etc/pulse/daemon.conf
+Line 31: ; exit-idle-time = 20
+```
+After modification: 
+```
+Line31: exit-idle-time = -1
+```
+Then /bin/pulseaudio.exe can be ran.
+
+
+Image can be ran using following command:
 
 ```bash
 docker run --rm -d --add-host pluto.local:192.168.2.1 --volume C:\Users\filluser\path\docker-gnuradio-pluto-master\gnuradio:/home/gnuradio -e DISPLAY=host.docker.internal:0 -e PULSE_SERVER=tcp:192.168.2.10 --network host --name gnuradio gnuradio
 ```
-Where ip address 192.168.2.1 is pointing to pluto. Address 192.168.2.10 points to host. This addresses are default for pluto.
+Where ip address 192.168.2.1 is pointing to pluto. Address 192.168.2.10 points to host. These addresses are default for pluto.
 
 
 
